@@ -49,7 +49,8 @@ public class QueenProblem {
                 // Place queen on column/square
                 newRunningBoard[currentRow][i] = 2;
 
-                // Lock column/square
+                // Lock whole column on which the queen was placed
+                // (only column in rows below current row are calculated for speed improvement)
                 for (int x = 0; x < boardSize; x++) {
                     if (x > currentRow) {
                         newRunningBoard[x][i] = 1;
@@ -57,6 +58,7 @@ public class QueenProblem {
                 }
 
                 // Lock diagonal lines
+                // (only column in rows below current row are calculated for speed improvement)
                 for (int f = 0; f < boardSize; f++) {
                     int newRow = currentRow + (f + 1);
                     if (i - (f + 1) >= 0 && newRow < boardSize) {
