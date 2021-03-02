@@ -3,7 +3,7 @@ import java.util.Arrays;
 public class QueenProblem {
 
     // Board size and N of queens
-    private static final int boardSize = 8;
+    private static final int N = 8;
 
     // Total number of solutions found
     private static int totalSolutions = 0;
@@ -11,8 +11,8 @@ public class QueenProblem {
     public static void main(String[] args) {
 
         // Initialize starting position of the board
-        int[][] board = new int[boardSize][boardSize];
-        for (int i = 0; i < boardSize; i++) {
+        int[][] board = new int[N][N];
+        for (int i = 0; i < N; i++) {
             Arrays.fill(board[i], 0);
         }
 
@@ -26,9 +26,9 @@ public class QueenProblem {
     public static void calculateOption(int[][] currentRunningBoard, int currentRow) {
 
         // Solution found
-        if (currentRow == QueenProblem.boardSize) {
+        if (currentRow == N) {
             // Print solution and return
-            QueenProblem.printSolution(currentRunningBoard);
+            printSolution(currentRunningBoard);
             return;
         }
 
@@ -37,40 +37,32 @@ public class QueenProblem {
             // If the column/square is not locked
             if (currentRunningBoard[currentRow][i] == 0) {
 
-                // Set local board size variable
-                int boardSize = QueenProblem.boardSize;
-
                 // Create new board instance
-                int[][] newRunningBoard = new int[boardSize][];
-                for (int r = 0; r < boardSize; r++) {
+                int[][] newRunningBoard = new int[N][];
+                for (int r = 0; r < N; r++) {
                     newRunningBoard[r] = Arrays.copyOf(currentRunningBoard[r], currentRunningBoard[r].length);
                 }
 
                 // Place queen on column/square
                 newRunningBoard[currentRow][i] = 2;
 
-                // Lock whole column on which the queen was placed
-                // (only column in rows below current row are calculated for speed improvement)
-                for (int x = 0; x < boardSize; x++) {
+                // Lock column and diagonals on which the queen was placed
+                // (only column/diagonals in rows below current row are calculated for speed improvement)
+                for (int x = 0; x < N; x++) {
                     if (x > currentRow) {
                         newRunningBoard[x][i] = 1;
                     }
-                }
 
-                // Lock diagonal lines
-                // (only column in rows below current row are calculated for speed improvement)
-                for (int f = 0; f < boardSize; f++) {
-                    int newRow = currentRow + (f + 1);
-                    if (i - (f + 1) >= 0 && newRow < boardSize) {
-                        newRunningBoard[newRow][i - (f + 1)] = 1;
+                    if (currentRow + (x + 1) < N && i - x > 0) {
+                        newRunningBoard[currentRow + (x + 1)][i - (x + 1)] = 1;
                     }
-                    if (i + (f + 1) <= (boardSize - 1) && newRow < boardSize) {
-                        newRunningBoard[newRow][i + (f + 1)] = 1;
+                    if (currentRow + (x + 1) < N && i + x < (N - 1)) {
+                        newRunningBoard[currentRow + (x + 1)][i + (x + 1)] = 1;
                     }
                 }
 
                 // Start new iteration to solve the next row
-                QueenProblem.calculateOption(newRunningBoard, currentRow+1);
+                calculateOption(newRunningBoard, currentRow+1);
             }
         }
     }
@@ -78,9 +70,9 @@ public class QueenProblem {
     private static void printSolution(int[][] solution) {
 
         // Print the solution
-        for (int y = 0; y < QueenProblem.boardSize; y++) {
+        for (int y = 0; y < N; y++) {
             String solutionVisualization = "";
-            for (int x = 0; x < QueenProblem.boardSize; x++) {
+            for (int x = 0; x < N; x++) {
                 if (solution[y][x] == 0 || solution[y][x] == 1) {
                     solutionVisualization += " - ";
                 }
@@ -93,6 +85,6 @@ public class QueenProblem {
         System.out.println("\n");
 
         // Add 1 to total found solutions
-        QueenProblem.totalSolutions = QueenProblem.totalSolutions + 1;
+        totalSolutions = totalSolutions + 1;
     }
 }
